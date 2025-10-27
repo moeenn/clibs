@@ -1,0 +1,35 @@
+#pragma once
+#include <stdint.h>
+#include <stdio.h>
+#include <string.h>
+
+typedef struct {
+    size_t size;
+    size_t idx;
+    uint8_t buf[];
+} stackallocator_t;
+
+void stackallocator_init(stackallocator_t* self, const size_t size)
+{
+    self->size = size;
+    self->idx = 0;
+    memset(self->buf, 0, size);
+}
+
+void stackallocator_deinit(stackallocator_t* self)
+{
+    self->idx = 0;
+    self->size = 0;
+    memset(self->buf, 0, self->size);
+}
+
+[[nodiscard]] void* stackallocator_reserve(stackallocator_t* self, size_t bytes)
+{
+    if ((self->idx + bytes) > self->size) {
+        return NULL;
+    }
+
+    void* out = &self->buf[self->idx];
+    self->idx += bytes;
+    return out;
+}
