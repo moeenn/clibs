@@ -1,15 +1,47 @@
 #include "common.h"
-#include "stackallocator.h"
+#include "fixedheapallocator.h"
+#include "vector.h"
+
+void print_nums(size_t idx, int n)
+{
+    printf("%zu -> %d\n", idx, n);
+}
 
 int main()
 {
-    stackallocator_t a;
-    stackallocator_init(&a, 20);
+    fixedHeapAllocator_t sa;
+    if (RESULT_ERR == fixedHeapAllocator_init(&sa, 20)) {
+        fprintf(stderr, "error: failed to init allcator.\n");
+        return RESULT_ERR;
+    }
 
-    int* first = stackallocator_reserve(&a, 4);
-    *first = 10;
-    printf("first = %d\n", *first);
+    vector_t v;
+    if (RESULT_ERR == vector_init(&v, &sa, 20)) {
+        fprintf(stderr, "error: failed to allocate vector.\n");
+        return RESULT_ERR;
+    }
 
-    stackallocator_deinit(&a);
+    if (RESULT_ERR == vector_push(&v, &sa, 10)) {
+        fprintf(stderr, "error: failed to push into vector.\n");
+        return RESULT_ERR;
+    }
+
+    if (RESULT_ERR == vector_push(&v, &sa, 20)) {
+        fprintf(stderr, "error: failed to push into vector.\n");
+        return RESULT_ERR;
+    }
+
+    if (RESULT_ERR == vector_push(&v, &sa, 30)) {
+        fprintf(stderr, "error: failed to push into vector.\n");
+        return RESULT_ERR;
+    }
+    if (RESULT_ERR == vector_push(&v, &sa, 40)) {
+        fprintf(stderr, "error: failed to push into vector.\n");
+        return RESULT_ERR;
+    }
+
+    vector_iter(&v, sizeof(int), print_nums);
+    fixedHeapAllocator_deinit(&sa);
+
     return RESULT_OK;
 }

@@ -7,23 +7,23 @@ typedef struct {
     size_t size;
     size_t idx;
     uint8_t buf[];
-} stackallocator_t;
+} stackAllocator_t;
 
-void stackallocator_init(stackallocator_t* self, const size_t size)
+void stackAllocator_init(stackAllocator_t* self, const size_t size)
 {
     self->size = size;
     self->idx = 0;
-    memset(self->buf, 0, size);
+    // memset(self->buf, 0, size);
 }
 
-void stackallocator_deinit(stackallocator_t* self)
+void stackAllocator_deinit(stackAllocator_t* self)
 {
     self->idx = 0;
     self->size = 0;
-    memset(self->buf, 0, self->size);
+    // memset(self->buf, 0, self->size);
 }
 
-[[nodiscard]] void* stackallocator_reserve(stackallocator_t* self, size_t bytes)
+[[nodiscard]] void* stackAllocator_reserve(stackAllocator_t* self, size_t bytes)
 {
     if ((self->idx + bytes) > self->size) {
         return NULL;
