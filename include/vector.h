@@ -1,6 +1,6 @@
 #pragma once
+#include "allocator.h"
 #include "common.h"
-#include "fixedheapallocator.h"
 #include <stdint.h>
 #include <stdio.h>
 #include <string.h>
@@ -11,11 +11,11 @@ typedef struct {
     uint8_t* buf;
 } vector_t;
 
-result_e vector_init(vector_t* self, fixedHeapAllocator_t* allocator, size_t capacity)
+result_e vector_init(vector_t* self, allocator_t* allocator, size_t capacity)
 {
     self->capacity = capacity;
     self->size = 0;
-    self->buf = fixedHeapAllocator_reserve(allocator, capacity);
+    self->buf = allocator_reserve(allocator, capacity);
     if (self->buf == NULL) {
         return RESULT_ERR;
     }
@@ -31,7 +31,7 @@ void vector_deinit(vector_t* self)
 }
 
 [[nodiscard]]
-result_e vector_resize(vector_t* self, fixedHeapAllocator_t* allocator)
+result_e vector_resize(vector_t* self, allocator_t* allocator)
 {
     bool shouldResize = self->size >= self->capacity;
     if (!shouldResize) {
@@ -39,7 +39,7 @@ result_e vector_resize(vector_t* self, fixedHeapAllocator_t* allocator)
     }
 
     size_t newCapacity = self->capacity * 2;
-    void* newBuf = fixedHeapAllocator_reserve(allocator, newCapacity);
+    void* newBuf = allocator_reserve(allocator, newCapacity);
     if (newBuf == NULL) {
         return RESULT_ERR;
     }
@@ -52,7 +52,7 @@ result_e vector_resize(vector_t* self, fixedHeapAllocator_t* allocator)
 
 // TODO: make generic.
 [[nodiscard]]
-result_e vector_push(vector_t* self, fixedHeapAllocator_t* allocator, int data)
+result_e vector_push(vector_t* self, allocator_t* allocator, int data)
 {
     bool shouldResize = self->size >= self->capacity;
     if (shouldResize) {
@@ -67,7 +67,7 @@ result_e vector_push(vector_t* self, fixedHeapAllocator_t* allocator, int data)
 }
 
 // TODO: make generic.
-void vector_iter(vector_t* self, size_t stepSize, void (*callback)(size_t, int))
+inline void vector_iter(vector_t* self, size_t stepSize, void (*callback)(size_t, int))
 {
     size_t i;
     for (i = 0; i < self->size; i += stepSize) {
