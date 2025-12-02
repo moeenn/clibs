@@ -17,7 +17,8 @@ int main()
     staticAllocator_init(&sa, buf, 100);
 
     fixedHeapAllocator_t fha;
-    if (RESULT_ERR == fixedHeapAllocator_init(&fha, 100)) {
+    if (RESULT_ERR == fixedHeapAllocator_init(&fha, 100))
+    {
         fprintf(stderr, "error: failed to initialize FHA.\n");
         return RESULT_ERR;
     }
@@ -26,30 +27,35 @@ int main()
     allocator_setFixedHeap(&a, &fha);
 
     vector_t v;
-    if (RESULT_ERR == vector_init(&v, &a, 20)) {
+    if (RESULT_ERR == vector_init(&v, &a, 20))
+    {
         fprintf(stderr, "error: failed to allocate vector.\n");
         goto cleanup;
         return RESULT_ERR;
     }
 
-    if (RESULT_ERR == vector_push(&v, &a, 10)) {
+    if (RESULT_ERR == vector_push(&v, &a, 10))
+    {
         fprintf(stderr, "error: failed to push into vector.\n");
         goto cleanup;
         return RESULT_ERR;
     }
 
-    if (RESULT_ERR == vector_push(&v, &a, 20)) {
+    if (RESULT_ERR == vector_push(&v, &a, 20))
+    {
         fprintf(stderr, "error: failed to push into vector.\n");
         goto cleanup;
         return RESULT_ERR;
     }
 
-    if (RESULT_ERR == vector_push(&v, &a, 30)) {
+    if (RESULT_ERR == vector_push(&v, &a, 30))
+    {
         fprintf(stderr, "error: failed to push into vector.\n");
         goto cleanup;
         return RESULT_ERR;
     }
-    if (RESULT_ERR == vector_push(&v, &a, 40)) {
+    if (RESULT_ERR == vector_push(&v, &a, 40))
+    {
         fprintf(stderr, "error: failed to push into vector.\n");
         goto cleanup;
         return RESULT_ERR;
